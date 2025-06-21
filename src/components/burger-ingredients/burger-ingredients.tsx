@@ -5,7 +5,6 @@ import { TIngredient, TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 import { selectIngredients } from '../../slices/ingredientsSlice';
 import { RootState } from 'src/services/store';
-import { selectCurrentTab } from '../../slices/ingredientsSlice';
 
 export const BurgerIngredients: FC = () => {
   /* TODO: взять переменные из стора */
@@ -18,10 +17,6 @@ export const BurgerIngredients: FC = () => {
   const titleBunRef = useRef<HTMLHeadingElement>(null);
   const titleMainRef = useRef<HTMLHeadingElement>(null);
   const titleSaucesRef = useRef<HTMLHeadingElement>(null);
-
-  const currentTabIngr = useSelector<RootState, string | null | undefined>(
-    selectCurrentTab
-  );
 
   const [bunsRef, inViewBuns] = useInView({
     threshold: 0
@@ -36,11 +31,6 @@ export const BurgerIngredients: FC = () => {
   });
 
   useEffect(() => {
-    console.log('currentTabIngr :', currentTabIngr);
-    setCurrentTab('sauce');
-  }, [currentTabIngr]);
-
-  useEffect(() => {
     if (inViewBuns) {
       setCurrentTab('bun');
     } else if (inViewSauces) {
@@ -48,7 +38,7 @@ export const BurgerIngredients: FC = () => {
     } else if (inViewFilling) {
       setCurrentTab('main');
     }
-  }, [inViewBuns, inViewFilling, inViewSauces, currentTabIngr]);
+  }, [inViewBuns, inViewFilling, inViewSauces]);
 
   const onTabClick = (tab: string) => {
     setCurrentTab(tab as TTabMode);

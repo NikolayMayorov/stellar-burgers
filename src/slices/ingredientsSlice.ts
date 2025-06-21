@@ -7,14 +7,12 @@ interface IngredientsState {
   ingredients: TIngredient[];
   loading: boolean;
   error: string | undefined | null;
-  currentTab: string | undefined | null;
 }
 
 const initialState: IngredientsState = {
   ingredients: [],
   loading: false,
-  error: null,
-  currentTab: null
+  error: null
 };
 
 export const getIngredients = createAsyncThunk('ingredients/getAll', async () =>
@@ -31,15 +29,11 @@ const ingredientsSlice = createSlice({
     },
     setLoading: (state, action) => {
       state.loading = action.payload;
-    },
-    setTab: (state, action) => {
-      state.currentTab = action.payload;
     }
   },
   selectors: {
     selectIngredients: (sliceState) => sliceState.ingredients,
-    selectLoading: (sliceState) => sliceState.loading,
-    selectCurrentTab: (sliceState) => sliceState.currentTab
+    selectLoading: (sliceState) => sliceState.loading
   },
   extraReducers: (builder) => {
     builder
@@ -59,9 +53,8 @@ const ingredientsSlice = createSlice({
   }
 });
 
-export const { selectIngredients, selectLoading, selectCurrentTab } =
-  ingredientsSlice.selectors;
-export const { setIngredients, setLoading, setTab } = ingredientsSlice.actions;
+export const { selectIngredients, selectLoading } = ingredientsSlice.selectors;
+export const { setIngredients, setLoading } = ingredientsSlice.actions;
 
 export default ingredientsSlice.reducer;
 // export const selectLoading = (state: IngredientsState) => state.loading;

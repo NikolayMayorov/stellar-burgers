@@ -17,7 +17,6 @@ import { ProtectedRoute } from '../protected-route';
 import { useDispatch } from '../../services/store';
 import { useEffect } from 'react';
 import { getIngredients } from '../../slices/ingredientsSlice';
-import { setTab } from '../../slices/ingredientsSlice';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -29,7 +28,6 @@ const App = () => {
   }, []);
 
   function handlerCloseModal() {
-    dispatch(setTab('bun'));
     navigate('/');
   }
 
