@@ -1,19 +1,27 @@
 import { useState, useRef, useEffect, FC } from 'react';
 import { useInView } from 'react-intersection-observer';
-
-import { TTabMode } from '@utils-types';
+import { useSelector } from 'react-redux';
+import { TIngredient, TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
+import { selectIngredients } from '../../slices/ingredientsSlice';
+import { RootState } from 'src/services/store';
+import { selectCurrentTab } from '../../slices/ingredientsSlice';
 
 export const BurgerIngredients: FC = () => {
-  /** TODO: взять переменные из стора */
-  const buns = [];
-  const mains = [];
-  const sauces = [];
+  /* TODO: взять переменные из стора */
+  const ingredients = useSelector<RootState, TIngredient[]>(selectIngredients);
+  const buns = ingredients.filter((item) => item.type === 'bun') || [];
+  const mains = ingredients.filter((item) => item.type === 'main') || [];
+  const sauces = ingredients.filter((item) => item.type === 'sauce') || [];
 
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
   const titleBunRef = useRef<HTMLHeadingElement>(null);
   const titleMainRef = useRef<HTMLHeadingElement>(null);
   const titleSaucesRef = useRef<HTMLHeadingElement>(null);
+
+  const currentTabIngr = useSelector<RootState, string | null | undefined>(
+    selectCurrentTab
+  );
 
   const [bunsRef, inViewBuns] = useInView({
     threshold: 0
@@ -28,6 +36,11 @@ export const BurgerIngredients: FC = () => {
   });
 
   useEffect(() => {
+    console.log('currentTabIngr :', currentTabIngr);
+    setCurrentTab('sauce');
+  }, [currentTabIngr]);
+
+  useEffect(() => {
     if (inViewBuns) {
       setCurrentTab('bun');
     } else if (inViewSauces) {
@@ -35,7 +48,7 @@ export const BurgerIngredients: FC = () => {
     } else if (inViewFilling) {
       setCurrentTab('main');
     }
-  }, [inViewBuns, inViewFilling, inViewSauces]);
+  }, [inViewBuns, inViewFilling, inViewSauces, currentTabIngr]);
 
   const onTabClick = (tab: string) => {
     setCurrentTab(tab as TTabMode);
@@ -47,7 +60,7 @@ export const BurgerIngredients: FC = () => {
       titleSaucesRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  return null;
+  //return null;
 
   return (
     <BurgerIngredientsUI

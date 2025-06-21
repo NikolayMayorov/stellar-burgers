@@ -4,7 +4,7 @@ import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
 
 export const OrderInfo: FC = () => {
-  /** TODO: взять переменные orderData и ingredients из стора */
+  /* TODO: взять переменные orderData и ingredients из стора */
   const orderData = {
     createdAt: '',
     ingredients: [],
