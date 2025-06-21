@@ -30,7 +30,6 @@ const basketSlice = createSlice({
         (ingredient, itemIndex) => itemIndex !== action.payload
       );
     },
-
     moveUpIngredient: (state, action) => {
       const index = action.payload;
       if (index > 0) {
