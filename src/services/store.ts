@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import ingredientsReducer from '../slices/ingredientsSlice';
 import basketReducer from '../slices/basketSlice';
-
+import authReducer from '../slices/authSlice';
 import {
   TypedUseSelectorHook,
   useDispatch as dispatchHook,
@@ -14,7 +14,8 @@ import {
 
 const rootReducer = combineReducers({
   ingredients: ingredientsReducer,
-  basket: basketReducer
+  basket: basketReducer,
+  auth: authReducer
 });
 const store = configureStore({
   reducer: rootReducer,

@@ -1,9 +1,15 @@
 import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
 import { Outlet, Navigate } from 'react-router-dom';
-// import { RootState } from '../../store';
-// import { Role } from '../../types';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { selectIsAuthChecked } from '../../slices/authSlice';
 
-export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => (
-  <Outlet />
-);
+type ProtectedRouteProps = {
+  children: React.ReactElement;
+};
+
+export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+  const isAuthChecked = useSelector(selectIsAuthChecked);
+  // const user = useSelector(userDataSelector);
+  return children;
+};

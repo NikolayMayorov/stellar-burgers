@@ -17,15 +17,28 @@ import { ProtectedRoute } from '../protected-route';
 import { useDispatch } from '../../services/store';
 import { useEffect } from 'react';
 import { getIngredients } from '../../slices/ingredientsSlice';
+import { registrationUser } from '../../slices/authSlice';
+import { TRegisterData } from '@api';
 
 const App = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const background = location.state && location.state.background;
+
   useEffect(() => {
     dispatch(getIngredients());
   }, []);
+
+  // const registerData: TRegisterData = {
+  //   email: 'test1245@mail.ru',
+  //   password: '1245',
+  //   name: 'test1245'
+  // };
+
+  // useEffect(() => {
+  //   dispatch(registrationUser(registerData));
+  // }, [registerData]);
 
   function handlerCloseModal() {
     navigate('/');
@@ -48,14 +61,7 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        <Route
-          path='/register'
-          element={
-            <ProtectedRoute>
-              <Register />
-            </ProtectedRoute>
-          }
-        />
+        <Route path='/register' element={<Register />} />
         <Route
           path='/forgot-password'
           element={
