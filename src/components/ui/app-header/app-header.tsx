@@ -14,8 +14,14 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
     <nav className={`${styles.menu} p-4`}>
       <div className={styles.menu_part_left}>
         <>
-          <BurgerIcon type={'primary'} />
-          <p className='text text_type_main-default ml-2 mr-10'>Конструктор</p>
+          <Link className={styles.article} to={'/'}>
+            <div className={styles.link_position_last}>
+              <BurgerIcon type={'primary'} />
+              <p className='text text_type_main-default ml-2 mr-10'>
+                Конструктор
+              </p>
+            </div>
+          </Link>
         </>
         <>
           <ListIcon type={'primary'} />

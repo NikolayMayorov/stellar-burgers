@@ -3,7 +3,7 @@ import { LoginUI } from '@ui-pages';
 import { useDispatch, useSelector } from '../../services/store';
 import {
   selectLoginUserError,
-  selectLoginUserRequest,
+  selectLoading,
   loginUser,
   selectIsAuthenticated
 } from '../../slices/authSlice';
@@ -16,7 +16,7 @@ export const Login: FC = () => {
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
   const loginUserError = useSelector(selectLoginUserError);
-  const loginUserRequest = useSelector(selectLoginUserRequest);
+  const loading = useSelector(selectLoading);
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
   const handleSubmit = (e: SyntheticEvent) => {
@@ -29,7 +29,7 @@ export const Login: FC = () => {
     dispatch(loginUser(loginData));
   };
 
-  if (loginUserRequest) {
+  if (loading) {
     return <Preloader />;
   }
 

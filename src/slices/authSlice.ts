@@ -1,12 +1,18 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { registerUserApi, loginUserApi, TLoginData } from '../utils/burger-api';
+import {
+  registerUserApi,
+  loginUserApi,
+  TLoginData,
+  getUserApi,
+  logoutApi
+} from '../utils/burger-api';
 import {
   TRegisterData
   // TAuthResponse,
   // TServerResponse
 } from '../utils/burger-api';
 import { TUser } from '@utils-types';
-
+import { setCookie } from '../utils/cookie';
 export type AuthResponse = {
   success: boolean;
   user: {
@@ -18,23 +24,23 @@ export type AuthResponse = {
 };
 
 interface AuthState {
-  isAuthChecked: boolean; // флаг для статуса проверки токена пользователя
+  isInit: boolean; //?????
   isAuthenticated: boolean;
   userData: TUser | null;
   loginUserError: string | null | undefined;
-  loginUserRequest: boolean;
-  registrationUserError: string | null | undefined;
-  registrationRequest: boolean;
+  //loginUserRequest: boolean;
+  requestError: string | null | undefined;
+  //registrationRequest: boolean;
+  loading: boolean;
 }
 
 const initialState: AuthState = {
-  isAuthChecked: false,
+  isInit: false,
   isAuthenticated: false,
   userData: null,
   loginUserError: null,
-  loginUserRequest: false,
-  registrationUserError: null,
-  registrationRequest: false
+  requestError: null,
+  loading: false
 };
 
 export const registrationUser = createAsyncThunk(
@@ -47,77 +53,121 @@ export const loginUser = createAsyncThunk(
   async (registerData: TLoginData) => await loginUserApi(registerData)
 );
 
+export const getUser = createAsyncThunk(
+  'auth/getUser',
+  async () => await getUserApi()
+);
+
+export const logoutUser = createAsyncThunk(
+  'auth/logoutUser',
+  async () => await logoutApi()
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setAuthChecked: (state, action) => {
-      state.isAuthChecked = action.payload;
+    init: (state) => {
+      state.isInit = true;
     }
   },
   extraReducers: (builder) => {
     //registrationUser
     builder
       .addCase(registrationUser.pending, (state) => {
-        state.registrationRequest = true;
+        state.loading = true;
       })
       .addCase(registrationUser.rejected, (state, action) => {
-        state.registrationRequest = false;
-        state.registrationUserError = action.error.message;
-        console.error(
-          'state.registrationUserError:',
-          state?.registrationUserError
-        );
+        state.loading = false;
+        state.requestError = action.error.message;
+        console.error('state.registrationUserError:', state?.requestError);
       })
       .addCase(registrationUser.fulfilled, (state, action) => {
         console.log('registrationUser fetched:', action.payload);
-        state.registrationRequest = false;
+        state.loading = false;
         if (action.payload?.success) {
-          state.registrationUserError = null;
+          state.requestError = null;
           state.isAuthenticated = true;
           state.userData = action.payload.user;
-          localStorage.setItem('accessToken', action.payload.accessToken);
+          //localStorage.setItem('token', action.payload.accessToken);
+          setCookie('accessToken', action.payload.accessToken);
+          localStorage.setItem('refreshToken', action.payload.refreshToken);
         }
       });
     //loginUser
     builder
       .addCase(loginUser.pending, (state) => {
-        state.loginUserRequest = true;
+        state.loading = true;
       })
       .addCase(loginUser.rejected, (state, action) => {
-        state.loginUserRequest = false;
+        state.loading = false;
         state.loginUserError = action.error.message;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        console.log('loginUser fetched:', action.payload);
-        state.loginUserRequest = false;
+        state.loading = false;
         if (action.payload?.success) {
           state.loginUserError = null;
           state.isAuthenticated = true;
           state.userData = action.payload.user;
-          localStorage.setItem('accessToken', action.payload.accessToken);
+          //localStorage.setItem('token', action.payload.accessToken);
+          setCookie('accessToken', action.payload.accessToken);
+          localStorage.setItem('refreshToken', action.payload.refreshToken);
+        }
+      });
+    //getUser
+    builder
+      .addCase(getUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getUser.rejected, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(getUser.fulfilled, (state, action) => {
+        state.loading = false;
+        // console.log('getUser fetched:', action.payload);
+        if (action.payload?.success) {
+          state.loginUserError = null;
+          state.isAuthenticated = true;
+          state.userData = action.payload.user;
+        }
+      });
+    //logoutUser
+    builder
+      .addCase(logoutUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(logoutUser.fulfilled, (state, action) => {
+        state.loading = false;
+        //console.log('logoutUser fetched:', action.payload);
+        if (action.payload?.success) {
+          state.isAuthenticated = false;
+          state.userData = null;
+          state.requestError = null;
+          state.loginUserError = null;
+          //localStorage.removeItem('token');
+          setCookie('accessToken', '');
+          localStorage.removeItem('refreshToken');
         }
       });
   },
   selectors: {
-    selectIsAuthChecked: (state) => state.isAuthChecked,
     selectIsAuthenticated: (state) => state.isAuthenticated,
-    selectRegistrationUserError: (state) => state.registrationUserError,
-    selectRegistrationRequest: (state) => state.registrationRequest,
+    selectRegistrationUserError: (state) => state.requestError,
     selectLoginUserError: (state) => state.loginUserError,
-    selectLoginUserRequest: (state) => state.loginUserRequest,
-    selectUserData: (state) => state.userData
+    selectUserData: (state) => state.userData,
+    selectLoading: (state) => state.loading
   }
 });
 
-export const { setAuthChecked } = authSlice.actions;
+export const { init } = authSlice.actions;
 export const {
-  selectIsAuthChecked,
   selectRegistrationUserError,
-  selectRegistrationRequest,
   selectLoginUserError,
-  selectLoginUserRequest,
   selectIsAuthenticated,
-  selectUserData
+  selectUserData,
+  selectLoading
 } = authSlice.selectors;
 export default authSlice.reducer;

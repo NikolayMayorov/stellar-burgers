@@ -17,7 +17,7 @@ import { ProtectedRoute } from '../protected-route';
 import { useDispatch } from '../../services/store';
 import { useEffect } from 'react';
 import { getIngredients } from '../../slices/ingredientsSlice';
-import { registrationUser } from '../../slices/authSlice';
+import { getUser, init } from '../../slices/authSlice';
 import { TRegisterData } from '@api';
 
 const App = () => {
@@ -30,15 +30,17 @@ const App = () => {
     dispatch(getIngredients());
   }, []);
 
-  // const registerData: TRegisterData = {
-  //   email: 'test1245@mail.ru',
-  //   password: '1245',
-  //   name: 'test1245'
-  // };
-
-  // useEffect(() => {
-  //   dispatch(registrationUser(registerData));
-  // }, [registerData]);
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    dispatch(getUser());
+    // if (token) {
+    //   dispatch(init()); //???
+    //   // console.log('token', token);
+    // } else {
+    //   console.log('no token');
+    //   dispatch(getUser());
+    // }
+  }, []);
 
   function handlerCloseModal() {
     navigate('/');

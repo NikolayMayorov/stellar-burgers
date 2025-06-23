@@ -5,7 +5,7 @@ import { TRegisterData } from '@api';
 import { useDispatch, useSelector } from '../../services/store';
 import {
   selectRegistrationUserError,
-  selectRegistrationRequest
+  selectLoading
 } from '../../slices/authSlice';
 import { Preloader } from '@ui';
 
@@ -15,7 +15,7 @@ export const Register: FC = () => {
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
   const registrationError = useSelector(selectRegistrationUserError);
-  const registrationRequest = useSelector(selectRegistrationRequest);
+  const loading = useSelector(selectLoading);
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -28,7 +28,7 @@ export const Register: FC = () => {
     dispatch(registrationUser(registerData));
   };
 
-  if (registrationRequest) {
+  if (loading) {
     return <Preloader />;
   }
 
