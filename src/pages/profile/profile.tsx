@@ -1,19 +1,16 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from '../../services/store';
 import { selectUserData } from '../../slices/authSlice';
+import { TUser } from '@utils-types';
+import { useSelector } from 'react-redux';
 
 export const Profile: FC = () => {
   /* TODO: взять переменную из стора */
-  const userData = useSelector(selectUserData);
-  const user = {
-    name: userData?.name || '',
-    email: userData?.email || ''
-  };
+  const user = useSelector(selectUserData);
 
   const [formValue, setFormValue] = useState({
-    name: user.name,
-    email: user.email,
+    name: user?.name || '',
+    email: user?.email || '',
     password: ''
   });
 
@@ -25,10 +22,13 @@ export const Profile: FC = () => {
     }));
   }, [user]);
 
+  // const isFormChanged =
+  //   formValue.name !== user?.name ||
+  //   formValue.email !== user?.email ||
+  //   !!formValue.password;
+
   const isFormChanged =
-    formValue.name !== user?.name ||
-    formValue.email !== user?.email ||
-    !!formValue.password;
+    formValue.name !== user?.name || formValue.email !== user?.email;
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -37,13 +37,15 @@ export const Profile: FC = () => {
   const handleCancel = (e: SyntheticEvent) => {
     e.preventDefault();
     setFormValue({
-      name: user.name,
-      email: user.email,
+      name: user?.name || '',
+      email: user?.email || '',
       password: ''
     });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('handleInputChange', e.target.name, e.target.value);
+
     setFormValue((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value

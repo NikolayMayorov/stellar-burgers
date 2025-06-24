@@ -4,7 +4,8 @@ import {
   loginUserApi,
   TLoginData,
   getUserApi,
-  logoutApi
+  logoutApi,
+  refreshToken
 } from '../utils/burger-api';
 import {
   TRegisterData
@@ -28,9 +29,7 @@ interface AuthState {
   isAuthenticated: boolean;
   userData: TUser | null;
   loginUserError: string | null | undefined;
-  //loginUserRequest: boolean;
   requestError: string | null | undefined;
-  //registrationRequest: boolean;
   loading: boolean;
 }
 
@@ -61,6 +60,11 @@ export const getUser = createAsyncThunk(
 export const logoutUser = createAsyncThunk(
   'auth/logoutUser',
   async () => await logoutApi()
+);
+
+export const refreshUserToken = createAsyncThunk(
+  'auth/refreshUserToken',
+  async () => await refreshToken()
 );
 
 const authSlice = createSlice({
@@ -124,7 +128,6 @@ const authSlice = createSlice({
       })
       .addCase(getUser.fulfilled, (state, action) => {
         state.loading = false;
-        // console.log('getUser fetched:', action.payload);
         if (action.payload?.success) {
           state.loginUserError = null;
           state.isAuthenticated = true;
@@ -141,7 +144,6 @@ const authSlice = createSlice({
       })
       .addCase(logoutUser.fulfilled, (state, action) => {
         state.loading = false;
-        //console.log('logoutUser fetched:', action.payload);
         if (action.payload?.success) {
           state.isAuthenticated = false;
           state.userData = null;
@@ -150,6 +152,22 @@ const authSlice = createSlice({
           //localStorage.removeItem('token');
           setCookie('accessToken', '');
           localStorage.removeItem('refreshToken');
+        }
+      });
+    //refreshUserToken
+    builder
+      .addCase(refreshUserToken.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(refreshUserToken.rejected, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(refreshUserToken.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload?.success) {
+          state.isAuthenticated = true;
+          setCookie('accessToken', action.payload.accessToken);
+          localStorage.setItem('refreshToken', action.payload.refreshToken);
         }
       });
   },

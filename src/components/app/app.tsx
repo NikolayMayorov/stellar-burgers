@@ -17,8 +17,9 @@ import { ProtectedRoute } from '../protected-route';
 import { useDispatch } from '../../services/store';
 import { useEffect } from 'react';
 import { getIngredients } from '../../slices/ingredientsSlice';
-import { getUser, init } from '../../slices/authSlice';
+import { getUser, init, refreshUserToken } from '../../slices/authSlice';
 import { TRegisterData } from '@api';
+import { getCookie } from '../../utils/cookie';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -31,15 +32,19 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = getCookie('accessToken');
+    if (token) {
+      dispatch(refreshUserToken());
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   const token = localStorage.getItem('token');
+  //   dispatch(init());
+  // }, []);
+
+  useEffect(() => {
     dispatch(getUser());
-    // if (token) {
-    //   dispatch(init()); //???
-    //   // console.log('token', token);
-    // } else {
-    //   console.log('no token');
-    //   dispatch(getUser());
-    // }
   }, []);
 
   function handlerCloseModal() {
