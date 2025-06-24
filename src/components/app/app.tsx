@@ -68,7 +68,14 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        <Route path='/register' element={<Register />} />
+        <Route
+          path='/register'
+          element={
+            <ProtectedRoute>
+              <Register />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path='/forgot-password'
           element={

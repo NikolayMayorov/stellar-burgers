@@ -5,7 +5,8 @@ import {
   TLoginData,
   getUserApi,
   logoutApi,
-  refreshToken
+  refreshToken,
+  updateUserApi
 } from '../utils/burger-api';
 import {
   TRegisterData
@@ -14,6 +15,7 @@ import {
 } from '../utils/burger-api';
 import { TUser } from '@utils-types';
 import { setCookie } from '../utils/cookie';
+import { Navigate } from 'react-router-dom';
 export type AuthResponse = {
   success: boolean;
   user: {
@@ -65,6 +67,11 @@ export const logoutUser = createAsyncThunk(
 export const refreshUserToken = createAsyncThunk(
   'auth/refreshUserToken',
   async () => await refreshToken()
+);
+
+export const updateUser = createAsyncThunk(
+  'auth/updateUser',
+  async (updateData: TRegisterData) => await updateUserApi(updateData)
 );
 
 const authSlice = createSlice({
@@ -168,6 +175,25 @@ const authSlice = createSlice({
           state.isAuthenticated = true;
           setCookie('accessToken', action.payload.accessToken);
           localStorage.setItem('refreshToken', action.payload.refreshToken);
+        }
+      });
+    //updateUser
+    builder
+      .addCase(updateUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.loading = false;
+        state.loginUserError = action.error.message;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log('updateUser fetched:', action.payload);
+        if (action.payload?.success) {
+          state.loginUserError = null;
+          state.isAuthenticated = true;
+          state.userData = action.payload.user;
+          //localStorage.setItem('email', action.payload.user.email);
         }
       });
   },

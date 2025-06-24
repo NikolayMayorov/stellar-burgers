@@ -1,4 +1,4 @@
-import { FC, SyntheticEvent, useState } from 'react';
+import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { RegisterUI } from '@ui-pages';
 import { registrationUser } from '../../slices/authSlice';
 import { TRegisterData } from '@api';
@@ -19,6 +19,7 @@ export const Register: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
+
     const registerData: TRegisterData = {
       email: email,
       password: password,
