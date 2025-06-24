@@ -38,17 +38,19 @@ const App = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   dispatch(init());
-  // }, []);
-
   useEffect(() => {
     dispatch(getUser());
   }, []);
 
   function handlerCloseModal() {
+    const path = location.pathname;
+    if (path.indexOf('/profile/orders/') > -1) {
+      navigate('/profile/orders');
+      return;
+    }
+
     navigate('/');
+    return;
   }
 
   //TODO: поправить !background
@@ -123,12 +125,7 @@ const App = () => {
           <Route
             path='/feed/:number'
             element={
-              <Modal
-                title={'OrderInfo'}
-                onClose={function (): void {
-                  throw new Error('Function not implemented.');
-                }}
-              >
+              <Modal title={'Заказы'} onClose={handlerCloseModal}>
                 <OrderInfo />
               </Modal>
             }
@@ -137,12 +134,7 @@ const App = () => {
             path='/profile/orders/:number'
             element={
               <ProtectedRoute>
-                <Modal
-                  title={'/profile/orders/:number'}
-                  onClose={function (): void {
-                    throw new Error('Function not implemented.');
-                  }}
-                >
+                <Modal title='Заказ' onClose={handlerCloseModal}>
                   <OrderInfo />
                 </Modal>
               </ProtectedRoute>
