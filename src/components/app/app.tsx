@@ -20,6 +20,7 @@ import { getIngredients } from '../../slices/ingredientsSlice';
 import { getUser, init, refreshUserToken } from '../../slices/authSlice';
 import { TRegisterData } from '@api';
 import { getCookie } from '../../utils/cookie';
+import { getFeeds } from '../../slices/basketSlice';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -41,6 +42,10 @@ const App = () => {
   useEffect(() => {
     dispatch(getUser());
   }, []);
+
+  // useEffect(() => {
+  //   dispatch(getFeeds());
+  // }, []);
 
   function handlerCloseModal() {
     const path = location.pathname;

@@ -8,10 +8,6 @@ import {
   useSelector as selectorHook
 } from 'react-redux';
 
-// const rootReducer = () => {
-//   ingredients: ingredientsReducer;
-// }; // Заменить на импорт настоящего редьюсера
-
 const rootReducer = combineReducers({
   ingredients: ingredientsReducer,
   basket: basketReducer,

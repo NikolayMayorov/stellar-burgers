@@ -9,7 +9,8 @@ import {
   selectOrdersHistory,
   selectLoading,
   selectOrderHistory,
-  historyOrders
+  historyOrders,
+  orderByNumber
 } from '../../slices/basketSlice';
 import { useParams } from 'react-router-dom';
 import { selectIngredients } from '../../slices/ingredientsSlice';
@@ -19,22 +20,25 @@ export const OrderInfo: FC = () => {
   const dispatch = useDispatch();
   const { number } = useParams<{ number: string }>();
 
+  console.log('OrderInfo number', number);
+
   const orders = useSelector(selectOrdersHistory);
   useEffect(() => {
     dispatch(historyOrders());
   }, [dispatch]);
 
-  const orderData = orders.find((order) => order.number === Number(number));
+  //const orderData = orders.find((order) => order.number === Number(number));
+  const orderData = useMemo(() => {
+    const foundOrder = orders.filter((o) => o.number === Number(number));
+    return foundOrder.length ? foundOrder[0] : null;
+  }, [number, orders]);
 
-  // const orderData = {
-  //   createdAt: '',
-  //   ingredients: [],
-  //   _id: '',
-  //   status: '',
-  //   name: '',
-  //   updatedAt: 'string',
-  //   number: 0
-  // };
+  // useEffect(() => {
+  //   dispatch(orderByNumber(Number(number)));
+  // }, [dispatch]);
+
+  // const orderData = useSelector(selectOrderHistory);
+  console.log('OrderInfo orderData', orderData);
 
   const ingredients = useSelector(selectIngredients);
   const isLoading = useSelector(selectLoading);
