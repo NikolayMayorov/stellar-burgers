@@ -1,4 +1,4 @@
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from '../../services/store';
 import styles from './constructor-page.module.css';
 
 import { BurgerIngredients } from '../../components';
@@ -10,7 +10,7 @@ import { RootState } from '../../services/store';
 
 export const ConstructorPage: FC = () => {
   /* TODO: взять переменную из стора */
-  const isIngredientsLoading = useSelector<RootState, boolean>(selectLoading);
+  const isIngredientsLoading = useSelector(selectLoading);
   //const isIngredientsLoading = useSelector(selectLoading);
 
   return (

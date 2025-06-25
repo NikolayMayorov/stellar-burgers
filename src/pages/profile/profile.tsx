@@ -2,8 +2,7 @@ import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { selectUserData, updateUser } from '../../slices/authSlice';
 import { TUser } from '@utils-types';
-import { useSelector } from 'react-redux';
-import { useDispatch } from '../../services/store';
+import { useDispatch, useSelector } from '../../services/store';
 export const Profile: FC = () => {
   /* TODO: взять переменную из стора */
   const user = useSelector(selectUserData);
