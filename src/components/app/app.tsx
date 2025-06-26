@@ -48,7 +48,8 @@ const App = () => {
   }, []);
 
   function handlerCloseModal() {
-    navigate(-1);
+    if (location.key !== 'default') navigate(-1);
+    else navigate('/');
   }
 
   return (
@@ -59,6 +60,15 @@ const App = () => {
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
         <Route path='/ingredients/:id' element={<IngredientDetails />} />
+        <Route path='/feed/:number' element={<OrderInfo />} />
+        <Route
+          path='/profile/orders/:number'
+          element={
+            <ProtectedRoute>
+              <OrderInfo />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path='/login'
           element={
