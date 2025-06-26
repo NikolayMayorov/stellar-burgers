@@ -9,7 +9,7 @@ import {
 } from '../../slices/authSlice';
 import { Preloader } from '@ui';
 import { TLoginData } from '@api';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 export const Login: FC = () => {
   const [email, setEmail] = useState('');
@@ -18,7 +18,9 @@ export const Login: FC = () => {
   const loginUserError = useSelector(selectLoginUserError);
   const loading = useSelector(selectLoading);
   const isAuthenticated = useSelector(selectIsAuthenticated);
+  const location = useLocation();
 
+  const from = location.state?.from || { pathname: '/' };
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
     localStorage.setItem('email', email);
@@ -35,6 +37,7 @@ export const Login: FC = () => {
 
   if (isAuthenticated) {
     return <Navigate to={'/profile'} />;
+    // return <Navigate to={from} replace />;
   }
 
   return (

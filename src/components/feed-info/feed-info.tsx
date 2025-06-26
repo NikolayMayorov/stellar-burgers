@@ -24,7 +24,7 @@ export const FeedInfo: FC = () => {
   /* TODO: взять переменные из стора */
 
   const orders: TOrder[] = useSelector(selectFeeds);
-  const feed = totalCount(orders.filter((item) => item.status !== 'done'));
+  const feed = totalCount(orders);
   const readyOrders = getOrders(orders, 'done');
 
   const pendingOrders = getOrders(orders, 'pending');

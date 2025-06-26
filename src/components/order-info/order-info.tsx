@@ -10,7 +10,8 @@ import {
   selectLoading,
   selectOrderHistory,
   historyOrders,
-  orderByNumber
+  orderByNumber,
+  selectFeeds
 } from '../../slices/basketSlice';
 import { useParams } from 'react-router-dom';
 import { selectIngredients } from '../../slices/ingredientsSlice';
@@ -19,29 +20,18 @@ export const OrderInfo: FC = () => {
   /* TODO: взять переменные orderData и ingredients из стора */
   const dispatch = useDispatch();
   const { number } = useParams<{ number: string }>();
-
-  console.log('OrderInfo number', number);
-
-  const orders = useSelector(selectOrdersHistory);
-  useEffect(() => {
-    dispatch(historyOrders());
-  }, [dispatch]);
-
-  //const orderData = orders.find((order) => order.number === Number(number));
-  const orderData = useMemo(() => {
-    const foundOrder = orders.filter((o) => o.number === Number(number));
-    return foundOrder.length ? foundOrder[0] : null;
-  }, [number, orders]);
-
-  // useEffect(() => {
-  //   dispatch(orderByNumber(Number(number)));
-  // }, [dispatch]);
-
-  // const orderData = useSelector(selectOrderHistory);
-  console.log('OrderInfo orderData', orderData);
-
+  const orders = useSelector(selectFeeds);
   const ingredients = useSelector(selectIngredients);
   const isLoading = useSelector(selectLoading);
+  useEffect(() => {
+    if (!orders.length && !isLoading) dispatch(historyOrders());
+  }, [dispatch, orders.length, isLoading]);
+
+  const orderData = useMemo(() => {
+    const foundOrder = orders.find((o) => o.number === Number(number));
+    return foundOrder;
+  }, [number, orders]);
+
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
     if (!orderData || !ingredients.length) return null;
@@ -82,7 +72,7 @@ export const OrderInfo: FC = () => {
       date,
       total
     };
-  }, [orderData, ingredients]);
+  }, [orderData, ingredients, orders]);
 
   if (!orderInfo || isLoading) {
     return <Preloader />;

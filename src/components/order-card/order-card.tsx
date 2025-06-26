@@ -14,7 +14,6 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
 
   /* TODO: взять переменную из стора */
   const ingredients: TIngredient[] = useSelector(selectIngredients);
-
   const orderInfo = useMemo(() => {
     if (!ingredients.length) return null;
 

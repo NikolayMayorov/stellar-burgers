@@ -11,16 +11,20 @@ import {
 } from '@pages';
 import '../../index.css';
 import styles from './app.module.css';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import {
+  Routes,
+  Route,
+  useNavigate,
+  useLocation,
+  Navigate
+} from 'react-router-dom';
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { ProtectedRoute } from '../protected-route';
 import { useDispatch } from '../../services/store';
 import { useEffect } from 'react';
 import { getIngredients } from '../../slices/ingredientsSlice';
 import { getUser, init, refreshUserToken } from '../../slices/authSlice';
-import { TRegisterData } from '@api';
 import { getCookie } from '../../utils/cookie';
-import { getFeeds } from '../../slices/basketSlice';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -43,22 +47,10 @@ const App = () => {
     dispatch(getUser());
   }, []);
 
-  // useEffect(() => {
-  //   dispatch(getFeeds());
-  // }, []);
-
   function handlerCloseModal() {
-    const path = location.pathname;
-    if (path.indexOf('/profile/orders/') > -1) {
-      navigate('/profile/orders');
-      return;
-    }
-
-    navigate('/');
-    return;
+    navigate(-1);
   }
 
-  //TODO: поправить !background
   return (
     <div className={styles.app}>
       <AppHeader />
@@ -130,7 +122,7 @@ const App = () => {
           <Route
             path='/feed/:number'
             element={
-              <Modal title={'Заказы'} onClose={handlerCloseModal}>
+              <Modal title='Заказ' onClose={handlerCloseModal}>
                 <OrderInfo />
               </Modal>
             }

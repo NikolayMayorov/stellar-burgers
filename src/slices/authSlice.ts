@@ -15,7 +15,6 @@ import {
 } from '../utils/burger-api';
 import { TUser } from '@utils-types';
 import { setCookie } from '../utils/cookie';
-import { Navigate } from 'react-router-dom';
 export type AuthResponse = {
   success: boolean;
   user: {
