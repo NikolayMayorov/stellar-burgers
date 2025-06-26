@@ -11,7 +11,8 @@ import {
   selectOrderHistory,
   historyOrders,
   orderByNumber,
-  selectFeeds
+  selectFeeds,
+  getFeeds
 } from '../../slices/basketSlice';
 import { useParams } from 'react-router-dom';
 import { selectIngredients } from '../../slices/ingredientsSlice';
@@ -23,10 +24,10 @@ export const OrderInfo: FC = () => {
   const orders = useSelector(selectFeeds);
   const ingredients = useSelector(selectIngredients);
   const isLoading = useSelector(selectLoading);
-  useEffect(() => {
-    if (!orders.length && !isLoading) dispatch(historyOrders());
-  }, [dispatch, orders.length, isLoading]);
 
+  useEffect(() => {
+    if (!orders.length && !isLoading) dispatch(getFeeds());
+  }, [dispatch, orders.length, isLoading]);
   const orderData = useMemo(() => {
     const foundOrder = orders.find((o) => o.number === Number(number));
     return foundOrder;

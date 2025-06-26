@@ -12,7 +12,7 @@ export const ProfileOrders: FC = () => {
   const orders = useSelector(selectFeeds);
   useEffect(() => {
     if (!orders.length && !loading) dispatch(getFeeds());
-  }, [dispatch, orders.length, loading]);
+  }, [dispatch]);
 
   if (loading) {
     return <Preloader />;
