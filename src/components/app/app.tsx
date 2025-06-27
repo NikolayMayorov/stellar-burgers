@@ -72,7 +72,7 @@ const App = () => {
         <Route
           path='/login'
           element={
-            <ProtectedRoute>
+            <ProtectedRoute anonymous>
               <Login />
             </ProtectedRoute>
           }
@@ -80,7 +80,7 @@ const App = () => {
         <Route
           path='/register'
           element={
-            <ProtectedRoute>
+            <ProtectedRoute anonymous>
               <Register />
             </ProtectedRoute>
           }

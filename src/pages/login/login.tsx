@@ -37,7 +37,7 @@ export const Login: FC = () => {
 
   if (isAuthenticated) {
     return <Navigate to={'/profile'} />;
-    // return <Navigate to={from} replace />;
+    //return <Navigate to={from} replace />;
   }
 
   return (
