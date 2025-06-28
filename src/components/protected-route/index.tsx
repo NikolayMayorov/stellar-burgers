@@ -29,13 +29,20 @@ export const ProtectedRoute = ({
   const location = useLocation();
   const from = location.state?.from || '/';
   const loading = useSelector(selectLoading);
+  const redirect = location.state?.redirect || false;
 
   if (loading) {
     return <Preloader />;
   }
 
+  if (isAuthenticated && !redirect) {
+    if (location.pathname === '/login' || location.pathname === '/register') {
+      return <Navigate to='/profile' />;
+    }
+  }
+
   // Если разрешен неавторизованный доступ, а пользователь авторизован...
-  if (anonymous && isAuthenticated) {
+  if (anonymous && isAuthenticated && redirect) {
     // ...то отправляем его на предыдущую страницу
     return <Navigate to={from} />;
   }
@@ -43,7 +50,7 @@ export const ProtectedRoute = ({
   // Если требуется авторизация, а пользователь не авторизован...
   if (!anonymous && !isAuthenticated) {
     // ...то отправляем его на страницу логин
-    return <Navigate to='/login' state={{ from: location }} />;
+    return <Navigate to='/login' state={{ from: location, redirect: true }} />;
   }
 
   // Если все ок, то рендерим внутреннее содержимое
