@@ -12,7 +12,7 @@ export const Feed: FC = () => {
   const dispatch = useDispatch();
 
   const handlerGetFeeds = useCallback(() => {
-    if (!orders.length) dispatch(getFeeds());
+    dispatch(getFeeds());
   }, [dispatch, orders.length]);
 
   useEffect(() => {

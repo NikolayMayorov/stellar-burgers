@@ -11,7 +11,7 @@ export const ProfileOrders: FC = () => {
   const loading = useSelector(selectLoading);
   const orders = useSelector(selectFeeds);
   useEffect(() => {
-    if (!orders.length && !loading) dispatch(getFeeds());
+    dispatch(getFeeds());
   }, [dispatch]);
 
   if (loading) {
